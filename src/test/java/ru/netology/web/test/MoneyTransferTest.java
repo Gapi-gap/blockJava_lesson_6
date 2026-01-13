@@ -49,5 +49,19 @@ class MoneyTransferTest {
         );
     }
 
+    @Test
+    void shouldTransferError()
+    {
+        int amount = DataHelper.generateInvalidAmount(secondCardBalance);
+        var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
+        transferPage.makeTransfer(String.valueOf(amount),secondCardInfo);
+        assertAll(
+                () -> transferPage.findErrorMesage("Выполнена попытка перевода суммы, превышающей остаток на карте списания"),
+                () -> dashboardPage.reloadDashboarPage(),
+                () -> dashboardPage.checkCardBalance(firstCardInfo,firstCardBalance),
+                () -> dashboardPage.checkCardBalance(secondCardInfo,secondCardBalance)
+                );
+    }
+
 }
 
